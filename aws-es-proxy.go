@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"crypto/subtle"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -463,12 +462,8 @@ func copyHeaders(dst, src http.Header) {
 	}
 }
 
-func HelloWorld() {
-	fmt.Println("Hello world!")
-}
-
 // func main() {
-func StartProxy() {
+func StartProxy(endpoint string) {
 
 	var (
 		debug           bool
@@ -481,7 +476,6 @@ func StartProxy() {
 		logtofile       bool
 		nosignreq       bool
 		ver             bool
-		endpoint        string
 		listenAddress   string
 		fileRequest     *os.File
 		fileResponse    *os.File
@@ -491,22 +485,37 @@ func StartProxy() {
 		assumeRole      string
 	)
 
-	flag.StringVar(&endpoint, "endpoint", "", "Amazon ElasticSearch Endpoint (e.g: https://dummy-host.eu-west-1.es.amazonaws.com)")
-	flag.StringVar(&listenAddress, "listen", "127.0.0.1:9200", "Local TCP port to listen on")
-	flag.BoolVar(&verbose, "verbose", false, "Print user requests")
-	flag.BoolVar(&logtofile, "log-to-file", false, "Log user requests and ElasticSearch responses to files")
-	flag.BoolVar(&prettify, "pretty", false, "Prettify verbose and file output")
-	flag.BoolVar(&nosignreq, "no-sign-reqs", false, "Disable AWS Signature v4")
-	flag.BoolVar(&debug, "debug", false, "Print debug messages")
-	flag.BoolVar(&ver, "version", false, "Print aws-es-proxy version")
-	flag.IntVar(&timeout, "timeout", 15, "Set a request timeout to ES. Specify in seconds, defaults to 15")
-	flag.BoolVar(&auth, "auth", false, "Require HTTP Basic Auth")
-	flag.StringVar(&username, "username", "", "HTTP Basic Auth Username")
-	flag.StringVar(&password, "password", "", "HTTP Basic Auth Password")
-	flag.StringVar(&realm, "realm", "", "Authentication Required")
-	flag.BoolVar(&remoteTerminate, "remote-terminate", false, "Allow HTTP remote termination")
-	flag.StringVar(&assumeRole, "assume", "", "Optionally specify role to assume")
-	flag.Parse()
+	// flag.StringVar(&endpoint, "endpoint", "", "Amazon ElasticSearch Endpoint (e.g: https://dummy-host.eu-west-1.es.amazonaws.com)")
+	// flag.StringVar(&listenAddress, "listen", "127.0.0.1:9200", "Local TCP port to listen on")
+	// flag.BoolVar(&verbose, "verbose", false, "Print user requests")
+	// flag.BoolVar(&logtofile, "log-to-file", false, "Log user requests and ElasticSearch responses to files")
+	// flag.BoolVar(&prettify, "pretty", false, "Prettify verbose and file output")
+	// flag.BoolVar(&nosignreq, "no-sign-reqs", false, "Disable AWS Signature v4")
+	// flag.BoolVar(&debug, "debug", false, "Print debug messages")
+	// flag.BoolVar(&ver, "version", false, "Print aws-es-proxy version")
+	// flag.IntVar(&timeout, "timeout", 15, "Set a request timeout to ES. Specify in seconds, defaults to 15")
+	// flag.BoolVar(&auth, "auth", false, "Require HTTP Basic Auth")
+	// flag.StringVar(&username, "username", "", "HTTP Basic Auth Username")
+	// flag.StringVar(&password, "password", "", "HTTP Basic Auth Password")
+	// flag.StringVar(&realm, "realm", "", "Authentication Required")
+	// flag.BoolVar(&remoteTerminate, "remote-terminate", false, "Allow HTTP remote termination")
+	// flag.StringVar(&assumeRole, "assume", "", "Optionally specify role to assume")
+	// flag.Parse()
+
+	listenAddress = "127.0.0.1:9200"
+	verbose = false
+	logtofile = false
+	prettify = false
+	nosignreq = false
+	debug = false
+	ver = false
+	timeout = 15
+	auth = false
+	username = ""
+	password = ""
+	realm = ""
+	remoteTerminate = false
+	assumeRole = ""
 
 	if endpoint == "" {
 		if v, ok := os.LookupEnv(strings.ToUpper("endpoint")); ok {
