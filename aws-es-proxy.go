@@ -1,4 +1,5 @@
-package main
+// package main
+package proxy
 
 import (
 	"bytes"
@@ -462,7 +463,12 @@ func copyHeaders(dst, src http.Header) {
 	}
 }
 
-func main() {
+func HelloWorld() {
+	fmt.Println("Hello world!")
+}
+
+// func main() {
+func StartProxy() {
 
 	var (
 		debug           bool
