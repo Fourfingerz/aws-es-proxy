@@ -90,6 +90,7 @@ type proxy struct {
 	realm           string
 	remoteTerminate bool
 	assumeRole      string
+	profile					string  
 }
 
 func newProxy(args ...interface{}) *proxy {
@@ -122,6 +123,7 @@ func newProxy(args ...interface{}) *proxy {
 		realm:           args[9].(string),
 		remoteTerminate: args[10].(bool),
 		assumeRole:      args[11].(string),
+		profile:      	 args[12].(string),
 	}
 }
 
@@ -201,6 +203,7 @@ func (p *proxy) getSigner() *v4.Signer {
 		sess, err := session.NewSessionWithOptions(session.Options{
 			Config:            aws.Config{CredentialsChainVerboseErrors: aws.Bool(true)},
 			SharedConfigState: session.SharedConfigEnable,
+			Profile:           p.profile,
 		})
 		if err != nil {
 			logrus.Debugln(err)
@@ -463,7 +466,7 @@ func copyHeaders(dst, src http.Header) {
 }
 
 // func main() {
-func StartProxy(endpoint string) {
+func StartProxy(endpoint string, profile string) {
 
 	var (
 		debug           bool
@@ -516,6 +519,7 @@ func StartProxy(endpoint string) {
 	realm = ""
 	remoteTerminate = false
 	assumeRole = ""
+	profile = profile
 
 	if endpoint == "" {
 		if v, ok := os.LookupEnv(strings.ToUpper("endpoint")); ok {
@@ -562,6 +566,7 @@ func StartProxy(endpoint string) {
 		realm,
 		remoteTerminate,
 		assumeRole,
+		profile,
 	)
 
 	if err = p.parseEndpoint(); err != nil {
