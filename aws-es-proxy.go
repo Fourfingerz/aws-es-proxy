@@ -90,7 +90,8 @@ type proxy struct {
 	realm           string
 	remoteTerminate bool
 	assumeRole      string
-	profile					string  
+	profile					string
+	port						string
 }
 
 func newProxy(args ...interface{}) *proxy {
@@ -466,7 +467,7 @@ func copyHeaders(dst, src http.Header) {
 }
 
 // func main() {
-func StartProxy(endpoint string, profile string) {
+func StartProxy(endpoint string, profile string, port string) {
 
 	var (
 		debug           bool
@@ -505,7 +506,8 @@ func StartProxy(endpoint string, profile string) {
 	// flag.StringVar(&assumeRole, "assume", "", "Optionally specify role to assume")
 	// flag.Parse()
 
-	listenAddress = "127.0.0.1:9200"
+	// listenAddress = "127.0.0.1:9200"
+	listenAddress = fmt.Sprintf("127.0.0.1:%s", port)
 	verbose = false
 	logtofile = false
 	prettify = false
